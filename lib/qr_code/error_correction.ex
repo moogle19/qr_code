@@ -10,13 +10,13 @@ defmodule QRCode.ErrorCorrection do
   @type groups() :: {[[], ...], [[]]}
   @type codewords() :: groups()
   @type t() :: %__MODULE__{
-          ec_codewrods_per_block: ExMaybe.t(integer()),
-          blocks_in_group1: ExMaybe.t(integer()),
-          codewords_per_block_in_group1: ExMaybe.t(integer()),
-          blocks_in_group2: ExMaybe.t(integer()),
-          codewords_per_block_in_group2: ExMaybe.t(integer()),
-          groups: ExMaybe.t(groups()),
-          codewords: ExMaybe.t(codewords())
+          ec_codewrods_per_block: integer() | nil,
+          blocks_in_group1: integer() | nil,
+          codewords_per_block_in_group1: integer() | nil,
+          blocks_in_group2: integer() | nil,
+          codewords_per_block_in_group2: integer() | nil,
+          groups: groups() | nil,
+          codewords: codewords() | nil
         }
 
   defstruct ec_codewrods_per_block: nil,

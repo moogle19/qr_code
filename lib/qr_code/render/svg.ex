@@ -10,10 +10,10 @@ defmodule QRCode.Render.Svg do
   @type t :: %__MODULE__{
           xmlns: String.t(),
           xlink: String.t(),
-          width: ExMaybe.t(integer),
-          height: ExMaybe.t(integer),
+          width: integer | nil,
+          height: integer | nil,
           body: String.t(),
-          rank_matrix: ExMaybe.t(pos_integer)
+          rank_matrix: pos_integer | nil
         }
 
   defstruct xmlns: "http://www.w3.org/2000/svg",

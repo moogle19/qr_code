@@ -23,6 +23,29 @@ defmodule QRCode.GeneratorPolynomial do
   @type degree() :: 1..254
   @type polynomial() :: [GField.alpha()]
 
+  @degrees Map.new(1..254, fn degree ->
+             value =
+               0..(degree - 1)
+               |> Enum.map(fn d -> [0, d] end)
+               |> Enum.reduce(fn [0, root], poly ->
+                 root_multiplied = Enum.map(poly, &GField.add(&1, root))
+
+                 last = root_multiplied |> Enum.reverse() |> hd()
+
+                 result =
+                   poly
+                   |> tl()
+                   |> Enum.zip_with(root_multiplied, fn
+                     0, 0 -> 0
+                     x, y -> GField.to_a(bxor(GField.to_i(x), GField.to_i(y)))
+                   end)
+
+                 [0 | result] ++ [last]
+               end)
+
+             {degree, value}
+           end)
+
   @doc """
   Returns generator polynomials in alpha exponent for given error code length.
   Example:
@@ -31,32 +54,6 @@ defmodule QRCode.GeneratorPolynomial do
   """
   @spec create(degree()) :: polynomial()
   def create(degree) when is_integer(degree) and degree in 1..254 do
-    degree
-    |> roots()
-    |> Enum.reduce(&multiply/2)
-  end
-
-  defp roots(degree, rts \\ [])
-  defp roots(1, rts), do: [[0, 0] | rts]
-
-  defp roots(degree, rts) do
-    roots(degree - 1, [[0, degree - 1] | rts])
-  end
-
-  defp multiply([0, root], poly) do
-    root_multiplied = Enum.map(poly, &GField.add(&1, root))
-
-    [last | _] = Enum.reverse(root_multiplied)
-
-    result =
-      poly
-      |> tl()
-      |> Enum.zip(root_multiplied)
-      |> Enum.map(fn
-        {0, 0} -> 0
-        {x, y} -> GField.to_a(bxor(GField.to_i(x), GField.to_i(y)))
-      end)
-
-    [0 | result] ++ [last]
+    Map.fetch!(@degrees, degree)
   end
 end

@@ -11,12 +11,12 @@ defmodule QRCode.QR do
   @type mask_num() :: 0..7
   @type groups() :: {[[], ...], [[]]}
   @type t() :: %__MODULE__{
-          orig: ExMaybe.t(String.t()),
-          encoded: ExMaybe.t(binary()),
-          version: ExMaybe.t(version()),
+          orig: String.t() | nil,
+          encoded: binary() | nil,
+          version: version() | nil,
           ecc_level: level(),
-          ecc: ExMaybe.t(ErrorCorrection.t()),
-          message: ExMaybe.t(String.t()),
+          ecc: ErrorCorrection.t() | nil,
+          message: String.t() | nil,
           mode: mode(),
           matrix: MatrixReloaded.Matrix.t(),
           mask_num: mask_num()
